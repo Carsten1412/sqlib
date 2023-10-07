@@ -11,8 +11,13 @@ func (r *TableRows) addRow(name string, datatype string) {
 func (r *TableRows) toString() string {
 	var line string
 
-	for _, v := range r.rowslist {
+	for k, v := range r.rowslist {
+		line += k + " "
+		line += v + ","
+	}
 
+	if len(line) > 0 {
+		line = line[:len(line)-1]
 	}
 
 	return line
