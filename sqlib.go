@@ -3,6 +3,7 @@ package sqlib
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"os"
 )
 
@@ -20,6 +21,19 @@ func CreateNewDatabase(filename string) error {
 		defer db.Close()
 	}
 
+	return nil
+}
+
+func CreateTable(database string, table string, rowlist TableRows) error {
+	db, err := sql.Open("sqlite3", database)
+	if err != nil {
+		return errors.New("Fehler beim Öffnen der Datenbank ... !")
+	}
+	defer db.Close()
+
+	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s)")
+
+	return nil
 }
 
 func checkifexists(filename string) bool {
