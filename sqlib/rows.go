@@ -4,20 +4,25 @@ type TableRows struct {
 	rowslist map[string]string
 }
 
-func (r *TableRows) addRow(name string, datatype string) {
-	r.rowslist["name"] = datatype
+func (r *TableRows) AddRow(name string, datatype string) {
+	r.rowslist[name] = datatype
 }
 
-func (r *TableRows) toString() string {
+func NewRowsList() TableRows {
+	return TableRows{
+		rowslist: make(map[string]string),
+	}
+}
+
+func (r *TableRows) ToString() string {
 	var line string
 
 	for k, v := range r.rowslist {
-		line += k + " "
-		line += v + ","
+		line += k + " " + v + ", "
 	}
 
 	if len(line) > 0 {
-		line = line[:len(line)-1]
+		line = line[:len(line)-2]
 	}
 
 	return line
