@@ -12,6 +12,14 @@ import (
 // type sqlib struct{}
 
 // erstellt eine neue Datenbank
+//
+// Beispiel :
+//
+// err := sqlib.CreateNewDatabase("TEST")
+//
+//	if err != nil {
+//		fmt.Println(err.Error())
+//	}
 func CreateNewDatabase(filename string) error {
 
 	if checkifexists(filename) {
@@ -29,6 +37,23 @@ func CreateNewDatabase(filename string) error {
 }
 
 // erstellt eine neuen Table mit den mit TableRows erstellten Liste
+
+// Beispiel :
+
+// zuerst muss der Datentyp Tablerows erstellt werde, um die Row für die Datenbank bereitzustellen
+// rowlist := sqlib.NewRowsList()
+// hier werden die einzelnen Zeilen hinzugefügt
+
+// rowlist.AddRow("name", "TEXT")
+// rowlist.AddRow("vorname", "TEXT")
+// rowlist.AddRow("age", "INTEGER")
+
+// hier wir der Table erstellt und die vordefnierten Rows hinzugefügt
+// err = sqlib.CreateTable("TEST", "Person", rowlist)
+
+//	if err != nil {
+//		fmt.Println(err.Error())
+//	}
 func CreateTable(database string, table string, rowlist TableRows) error {
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {
@@ -114,7 +139,46 @@ func GetAllFromTable(database string, table string) ([]map[string]interface{}, e
 }
 
 // holt von einem bestimmten Key die Daten
-func GetFromKey() {}
+func GetFromKey(database string, table string, key string) ([]map[string]interface{}, error) {
+
+	query := fmt.Sprintf("SELECT %s FROM %s", key, table)
+
+	db, err := sql.Open("sqlite3", database)
+	if err != nil {
+		return nil, errors.New(" Fehler beim Öffnen der Datenbank ... ")
+	}
+	defer db.Close()
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, errors.New(" Fehler beim Durchsuchen der Datenbank ... ")
+	}
+	defer rows.Close()
+
+	data := make([]map[string]interface{}, 0)
+	column, err := rows.Columns()
+
+	if err != nil {
+		return nil, errors.New(" Fehler beim Lesen der Columns ... ")
+	}
+
+	for rows.Next() {
+		var value interface{}
+
+		err := rows.Scan(&value)
+		if err != nil {
+			return nil, errors.New(" Fehler beim Auslesen der Datenbank ... ")
+		}
+
+		if value != nil {
+			newMap := map[string]interface{}{column[0]: value}
+			data = append(data, newMap)
+		}
+
+	}
+
+	return data, nil
+}
 
 // prüft ob die Datenbank vorhanden ist
 func checkifexists(filename string) bool {
