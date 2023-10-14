@@ -5,7 +5,7 @@ Here a few examples of the functions available in this package.
 
 Creates a new Database:
 
-myMap, err := sqlib.GetAllFromTable("TEST", "Person")
+myMap, err := sqlib.GetAllFromTable("TEST", "Person")\n
   if err != nil {
     fmt.Println(err.Error())
   }
