@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"sqlib/sqlib"
-
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -32,7 +29,7 @@ func main() {
 
 	// -------------------------------------------------------------
 
-	// Fügt die Daten in die Rows ein ------------------------------
+	//Fügt die Daten in die Rows ein ------------------------------
 
 	// sqlib.AddValue("TEST", "Person", "name", "Mustermann2")
 	// sqlib.AddValue("TEST", "Person", "vorname", "Paul2")
@@ -45,17 +42,25 @@ func main() {
 	// if err != nil {
 	// 	fmt.Println(err.Error())
 	// }
-
 	// fmt.Println(myMap)
 	// -------------------------------------------------------------
 
 	// Daten aus dem Table über einen Key holen --------------------
 
-	data, err := sqlib.GetFromKey("TEST", "Person", "name")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	fmt.Println(data)
+	// data, err := sqlib.GetFromKey("TEST", "Person", "name")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	// fmt.Println(data)
 
 	// -------------------------------------------------------------
+
+	// Daten aus dem Table über einen searchstring holen -----------
+	// myMap, err := sqlib.Search("TEST", "Person", "name", "Mustermann")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	// fmt.Println(myMap)
+	//
+
 }

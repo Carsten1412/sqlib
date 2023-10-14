@@ -72,7 +72,13 @@ func CreateTable(database string, table string, rowlist TableRows) error {
 	return nil
 }
 
-// fügt Daten in die Rows ein
+// Fügt die Daten in die Rows ein
+//
+// sqlib.AddValue("TEST", "Person", "name", "Mustermann2")
+//
+// sqlib.AddValue("TEST", "Person", "vorname", "Paul2")
+//
+// sqlib.AddValue("TEST", "Person", "age", "582")
 func AddValue(database string, table string, key string, value string) {
 	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES ('%s')", table, key, value)
 
@@ -90,6 +96,12 @@ func AddValue(database string, table string, key string, value string) {
 }
 
 // holt von allen Rows die Daten
+//
+// myMap, err := sqlib.GetAllFromTable("TEST", "Person")
+//
+//	if err != nil {
+//		fmt.Println(err.Error())
+//	}
 func GetAllFromTable(database string, table string) ([]map[string]interface{}, error) {
 
 	query := fmt.Sprintf("SELECT * FROM %s", table)
@@ -139,6 +151,14 @@ func GetAllFromTable(database string, table string) ([]map[string]interface{}, e
 }
 
 // holt von einem bestimmten Key die Daten
+//
+// data, err := sqlib.GetFromKey("TEST", "Person", "name")
+//
+//	if err != nil {
+//		fmt.Println(err.Error())
+//	}
+//
+// fmt.Println(data)
 func GetFromKey(database string, table string, key string) ([]map[string]interface{}, error) {
 
 	query := fmt.Sprintf("SELECT %s FROM %s", key, table)
@@ -179,6 +199,66 @@ func GetFromKey(database string, table string, key string) ([]map[string]interfa
 
 	return data, nil
 }
+
+// sucht in einer bestimmten Spalte der Datenbank nach einem Suchbegriff
+//
+// myMap, err := sqlib.Search("TEST", "Person", "name", "Mustermann")
+//
+//	if err != nil {
+//		fmt.Println(err.Error())
+//	}
+//
+// fmt.Println(myMap)
+func Search(database string, table string, column string, searchstring string) ([]map[string]interface{}, error) {
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE %s LIKE ? ", table, column)
+
+	db, err := sql.Open("sqlite3", database)
+	if err != nil {
+		return nil, errors.New(" Fehler beim Öffnen der Datenbank ... ")
+	}
+	defer db.Close()
+
+	rows, err := db.Query(query, "%"+searchstring+"%")
+	if err != nil {
+		return nil, errors.New(" Fehler beim Durchsuchen der Datenbank ... ")
+	}
+	defer rows.Close()
+
+	columns, err := rows.Columns()
+	if err != nil {
+		return nil, errors.New(" Fehler beim Auflisten der Spalten ... ")
+	}
+
+	values := make([]interface{}, len(columns))
+	valuesptr := make([]interface{}, len(columns))
+
+	data := make([]map[string]interface{}, 0)
+
+	for i := range columns {
+		valuesptr[i] = &values[i]
+	}
+
+	for rows.Next() {
+		err := rows.Scan(valuesptr...)
+		if err != nil {
+			return nil, errors.New(" Fehler beim Scannen der Reihen ... ")
+		}
+
+		for i, v := range columns {
+			val := values[i]
+			if val != nil {
+				newMap := map[string]interface{}{v: val}
+				data = append(data, newMap)
+			}
+		}
+	}
+
+	return data, nil
+}
+
+// such in der Datenbank in einem bestimmten Key nach dem Suchbegriff
+func searchKey() {}
 
 // prüft ob die Datenbank vorhanden ist
 func checkifexists(filename string) bool {
