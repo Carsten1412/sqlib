@@ -1,4 +1,4 @@
-module sqlib
+module github.com/Carsten1412/sqlib
 
 go 1.21.0
 

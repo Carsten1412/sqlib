@@ -56,11 +56,11 @@ func main() {
 	// -------------------------------------------------------------
 
 	// Daten aus dem Table über einen searchstring holen -----------
-	// myMap, err := sqlib.Search("TEST", "Person", "name", "Mustermann")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
-	// fmt.Println(myMap)
-	//
 
+	// myMap, err := sqlib.Search("TEST", "Person", "name", "Mustermann")
+	//
+	//	if err != nil {
+	//		fmt.Println(err.Error())
+	//	}
+	//	fmt.Println(myMap)
 }

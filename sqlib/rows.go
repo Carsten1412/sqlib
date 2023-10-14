@@ -32,7 +32,7 @@ func (r *TableRows) ToString() string {
 func (r *TableRows) makeKeyListString() string {
 	var line string
 
-	for k, _ := range r.rowslist {
+	for k := range r.rowslist {
 		line += k + ", "
 	}
 
