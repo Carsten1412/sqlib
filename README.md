@@ -9,3 +9,4 @@ myMap, err := sqlib.GetAllFromTable("TEST", "Person")
   if err != nil {
     fmt.Println(err.Error())
   }
+  
